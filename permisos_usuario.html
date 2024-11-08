@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Permisos Usuario</title>
+  <link href="css/tailwind.min.css" rel="stylesheet" />
+  <link href="css/style_usuario.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+  <!-- Encabezado Principal -->
+  <header class="bg-indigo-600 p-4 shadow-md flex items-center justify-between relative">
+    <div class="relative inline-block">
+      <button id="dropdownButton" class="flex items-center justify-center p-2 text-white focus:outline-none">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <h1 class="text-white text-3xl font-bold">Permisos Usuarios</h1>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="dropdownContent"
+    class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-10 transform -translate-x-full transition-transform">
+    <button id="backButton"
+      class="flex items-center px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white w-full text-left">
+      Atras
+    </button>
+    <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Inicio</a>
+    <a href="usuario.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Usuarios</a>
+    <a href="cliente.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Clientes</a>
+    <a href="producto.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Productos</a>
+    <a
+      href="factura.html"
+      class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white"
+      >Facturas</a
+    >
+  </div>
+
+
+  <!-- Contenedor del formulario -->
+  <div id="formContainer" class="max-w-md mx-auto p-6 border rounded-lg shadow-md bg-white mt-10">
+    <!-- El formulario se generará aquí por JS -->
+  </div>
+  
+  <!-- Modal de Éxito -->
+  <div
+  id="modalExito"
+  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+  </div>
+</div>
+
+  <!-- Pie de Página -->
+  <footer class="bg-indigo-600 text-white text-left p-4 fixed bottom-0 w-full">
+    <p>&copy; 2024 Sistema de Gestión. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Obtener los datos del usuario desde localStorage
+      const userId = localStorage.getItem('userId');
+      const userNombre = localStorage.getItem('userNombre');
+  
+      // Verificar si los datos existen
+      if (userId && userNombre) {
+        // Crear el formulario dinámicamente
+        const formContainer = document.getElementById('formContainer');
+        formContainer.innerHTML = `
+          <h1 class="text-2xl font-semibold text-center mb-6">Asignar Permisos a Usuario</h1>
+          <form id="permisosForm" class="space-y-4">
+            <div class="mb-4">
+              <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
+              <input type="text" id="nombre" value="${userNombre}" disabled
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+            </div>
+  
+            <div class="mb-4">
+              <label for="permisos" class="block text-sm font-medium text-gray-700">Seleccionar Permisos:</label>
+              <select id="permisos" name="permisos[]" required
+                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="admin">Administrador</option>
+                <option value="editor">Editor</option>
+                <option value="lector">Lector</option>
+                <option value="sin_permiso">Sin Permiso</option>
+              </select>
+            </div>
+  
+            <div class="mt-6 flex flex-col gap-4">
+              <!-- Botón para asignar permisos -->
+              <button type="submit"
+                class="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Asignar Permisos
+              </button>
+              
+              <!-- Botón para cancelar -->
+              <button type="button" onclick="window.location.href='usuario.html'"
+                class="w-full py-2 px-4 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        `;
+      } else {
+        // Si no hay información del usuario, redirigir al inicio
+        alert("No se encontró información del usuario.");
+        window.location.href = 'usuario.html';
+      }
+    });
+  </script>
+  
+  
+  <script src="js/app_permisos_usuario.js"></script>
+  <script src="js/script.js"></script>
+  
+</body>
+
+</html>

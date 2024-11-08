@@ -1,0 +1,8 @@
+# Habilitar la reescritura de URL
+RewriteEngine On
+
+# Permitir todos los métodos
+RewriteCond %{REQUEST_METHOD} POST
+RewriteRule .* - [L]
+
+# Aquí puedes agregar otras reglas según sea necesario

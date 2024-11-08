@@ -1,0 +1,48 @@
+// Puedes utilizar la propiedad `id` para identificar el input específico y asignarle el valor del precio unitario seleccionado.
+// Aquí te muestro cómo puedes hacerlo:
+
+const formData = new FormData();
+formData.append("action", "fetch");
+fetch("server_producto.php", {
+  method: "POST",
+  body: formData,
+})
+.then((response) => {
+  if (!response.ok) throw new Error("Error en la respuesta de la red");
+  return response.json();
+})
+.then((productos) => {
+  console.log("Productos cargados:", productos);
+  const selectProductos = document.querySelector(".producto_select");
+  const inputPrecioUnitario = document.getElementById("precio_unitario"); // Utiliza id para seleccionar el input
+  // Agregar opción por defecto
+  const optionDefault = document.createElement("option");
+  optionDefault.value = "";
+  optionDefault.text = "Seleccione un producto";
+  selectProductos.appendChild(optionDefault);
+  // Iterar sobre los productos y agregar opciones
+  productos.forEach((producto) => {
+    const option = document.createElement("option");
+    option.value = producto.id_producto;
+    option.text = producto.nombre;
+    selectProductos.appendChild(option);
+  });
+  // Agregar evento de cambio al select
+  selectProductos.addEventListener("change", (e) => {
+    const productoSeleccionado = productos.find((producto) => producto.id_producto === e.target.value);
+    if (productoSeleccionado) {
+      inputPrecioUnitario.value = productoSeleccionado.precio_unitario; // Asigna valor al input
+    } else {
+      inputPrecioUnitario.value = "0.00";
+    }
+  });
+});
+// ```
+// Y en tu HTML:
+// ```
+<div class="mb-4">
+  <label for="precio_unitario" class="block text-sm font-medium text-gray-700">Precio Unitario:</label>
+  <input type="text" id="precio_unitario" class="precio_unitario mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled value="0.00" />
+</div>
+// ```
+// De esta manera, cuando se selecciona un producto en el select, se asignará el valor del precio unitario correspondiente al input con el id `precio_unitario`.

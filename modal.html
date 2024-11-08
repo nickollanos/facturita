@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal con Tailwind CSS</title>
+    <link href="css/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center h-screen">
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModal" class="px-4 py-2 bg-indigo-600 text-white font-bold rounded-lg">
+        Abrir Modal
+    </button>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 flex items-center justify-center hidden modal">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+            <h2 class="text-lg font-semibold mb-4">Título del Modal</h2>
+            <p class="mb-4">Este es un ejemplo de un modal utilizando Tailwind CSS.</p>
+            <button id="closeModal" class="px-4 py-2 bg-gray-300 rounded-lg">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // Script para abrir y cerrar el modal
+        const openModal = document.getElementById('openModal');
+        const closeModal = document.getElementById('closeModal');
+        const modal = document.getElementById('modal');
+
+        openModal.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+
+        // Cerrar el modal al hacer clic fuera de él
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

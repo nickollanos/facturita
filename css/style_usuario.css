@@ -1,0 +1,17 @@
+/* Estilo personalizado para el menú lateral */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1;
+}
+
+#sidebar.active {
+    transform: translateX(0);
+}
+
+#openSidebar {
+    z-index: 1;
+}

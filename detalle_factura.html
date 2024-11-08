@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalle facturas</title>
+  <link href="css/tailwind.min.css" rel="stylesheet" />
+  <link href="css/style_usuario.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+  <!-- Encabezado Principal -->
+  <header class="bg-indigo-600 p-4 shadow-md flex items-center justify-between relative">
+    <div class="relative inline-block">
+      <button id="dropdownButton" class="flex items-center justify-center p-2 text-white focus:outline-none">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+    <h1 class="text-white text-3xl font-bold">Detalle facturas</h1>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="dropdownContent"
+    class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-10 transform -translate-x-full transition-transform">
+    <button id="backButton"
+      class="flex items-center px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white w-full text-left">
+      Atras
+    </button>
+    <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Inicio</a>
+    <a href="usuario.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Usuarios</a>
+    <a href="cliente.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Clientes</a>
+    <a href="producto.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Productos</a>
+    <a href="factura.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Facturas</a>
+  </div>
+
+  <!-- Contenedor del formulario -->
+  <div id="formContainer" class="max-w-md mx-auto p-6 border rounded-lg shadow-md bg-white mt-10">
+    <!-- El formulario se generará aquí por JS -->
+  </div>
+
+  <div id="container" class="max-w-md mx-auto p-6 pb-20 border rounded-lg shadow-md bg-white mt-10">
+    <button type="button" onclick="window.location.href='factura.html'" id="agregarProducto"
+      class="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 mt-4">
+      Agregar Compra
+    </button>
+
+
+    <button type="button" onclick="window.location.href='factura.html'" 
+        class="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 mt-4">
+        Guardar y Facturar
+    </button>
+    
+    <button type="button" onclick="window.location.href='factura.html'"
+        class="w-full py-2 px-4 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 mt-4">
+        Cancelar
+    </button>
+  </div>
+
+  <!-- Modal de Éxito -->
+  <div
+    id="modalExito"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+    </div>
+  </div>
+
+  <!-- Modal de Éxito -->
+  <div id="modalExito" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+    </div>
+  </div>
+
+  <!-- Pie de Página -->
+  <footer class="bg-indigo-600 text-white text-left p-4 fixed bottom-0 w-full">
+    <p>&copy; 2024 Sistema de Gestión. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Llamamos a la función para cargar el formulario inicialmente
+      crearFormularioFactura();
+  
+      // Evento de clic en el botón "Agregar Compra"
+      const botonAgregarCompra = document.getElementById("agregarProducto");
+      botonAgregarCompra.addEventListener("click", () => {
+        crearFormularioFactura();
+      });
+    });
+  
+    // Función que crea el formulario de factura
+    function crearFormularioFactura() {
+      // Obtener los datos del usuario desde localStorage
+      const facturaId = localStorage.getItem("facturaId");
+  
+      // Verificar si los datos existen
+      if (facturaId) {
+        // Crear el formulario dinámicamente
+        const formContainer = document.getElementById("formContainer");
+        formContainer.innerHTML = `
+          <h1 class="text-2xl font-semibold text-center mb-6">Detalles de Facturación</h1>
+          <form id="permisosForm" class="space-y-4">
+            <!-- Número de Factura -->
+            <div class="mb-4">
+              <label for="numero_factura" class="block text-sm font-medium text-gray-700">Número de Factura:</label>
+              <input type="text" id="numero_factura" value="${facturaId}" disabled
+                  class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" />
+            </div>
+  
+            <!-- Contenedor para las tarjetas de productos -->
+            <div id="productosContainer">
+              <!-- Tarjeta de Producto -->
+              <div class="productoCard mb-4 p-4 border rounded-md shadow-md bg-white">
+                <div class="mb-4">
+                  <label for="producto" class="block text-sm font-medium text-gray-700">Seleccionar Producto:</label>
+                  <select class="producto_select mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <!-- Opciones de productos se llenarán dinámicamente -->
+                  </select>
+                </div>
+  
+                <div class="mb-4">
+                  <label for="cantidad" class="block text-sm font-medium text-gray-700">Cantidad:</label>
+                  <input type="text" id="cantidad" class="cantidad mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" min="1" value="1" />
+                </div>
+  
+                <div class="mb-4">
+                  <label for="precio_unitario" class="block text-sm font-medium text-gray-700">Precio Unitario:</label>
+                  <input type="text" id="precio_unitario" class="precio_unitario mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled value="0.00" />
+                </div>
+  
+                <div class="mb-4">
+                  <label for="subtotal" class="block text-sm font-medium text-gray-700">Subtotal:</label>
+                  <input type="text" id="subtotal" class="subtotal mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled value="0.00" />
+                </div>
+  
+                <button type="button" class="eliminarProducto bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">Eliminar Producto</button>
+              </div>
+            </div>
+  
+          </form>
+          `
+        ;
+  
+        // Fetch para obtener los productos
+        const formData = new FormData();
+        formData.append("action", "fetch");
+        fetch("server_producto.php", {
+          method: "POST",
+          body: formData,
+        })
+        .then((response) => {
+          if (!response.ok) throw new Error("Error en la respuesta de la red");
+          return response.json();
+        })
+        .then((productos) => {
+          console.log("Productos cargados:", productos);
+          const selectProductos = document.querySelector(".producto_select");
+          const inputPrecioUnitario = document.getElementById("precio_unitario");
+          
+          // Agregar opción por defecto
+          const optionDefault = document.createElement("option");
+          optionDefault.value = "";
+          optionDefault.text = "Seleccione un producto";
+          selectProductos.appendChild(optionDefault);
+          
+          // Iterar sobre los productos y agregar opciones
+          productos.forEach((producto) => {
+            const option = document.createElement("option");
+            option.value = producto.id_producto;
+            option.text = producto.nombre;
+            selectProductos.appendChild(option);
+          });
+  
+          // Agregar evento de cambio al select
+          selectProductos.addEventListener("change", (e) => {
+            const idProductoSeleccionado = e.target.options[e.target.selectedIndex].value;
+            const productoSeleccionado = productos.find((producto) => producto.id_producto === parseInt(idProductoSeleccionado));
+            
+            if (productoSeleccionado) {
+              inputPrecioUnitario.value = productoSeleccionado.precio;
+            } else {
+              inputPrecioUnitario.value = "0.00";
+            }
+            // Calcular subtotal
+            calcularSubtotal();
+          });
+  
+          // Agregar evento de cambio al input de cantidad
+          document.querySelector(".cantidad").addEventListener("input", () => {
+            calcularSubtotal();
+          });
+  
+          // Función para calcular subtotal
+          function calcularSubtotal() {
+            const cantidad = parseInt(document.querySelector(".cantidad").value);
+            const precioUnitario = parseFloat(inputPrecioUnitario.value);
+            const subtotal = cantidad * precioUnitario;
+            document.querySelector(".subtotal").value = subtotal.toFixed(2);
+          }
+        })
+        .catch((error) => {
+          console.error("Error al cargar productos:", error);
+        });
+  
+        // Hacer scroll hasta el final para mostrar todo el formulario
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      } else {
+        // Si no hay información del usuario, redirigir al inicio
+        alert("No se encontró información de la factura.");
+        window.location.href = "factura.html";
+      }
+    }
+  </script>
+
+  <script src="js/app_detalle_factura.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>

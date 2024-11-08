@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>usuario</title>
+    <link href="css/tailwind.min.css" rel="stylesheet" />
+    <link href="css/style_usuario.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body class="bg-gray-100 text-gray-800">
+    <!-- Encabezado Principal -->
+    <header
+      class="bg-indigo-600 p-4 shadow-md flex items-center justify-between relative"
+    >
+      <div class="relative inline-block">
+        <button
+          id="dropdownButton"
+          class="flex items-center justify-center p-2 text-white focus:outline-none"
+        >
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+      <h1 class="text-white text-3xl font-bold">Usuarios</h1>
+    </header>
+
+    <!-- Sidebar -->
+    <div
+      id="dropdownContent"
+      class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-10 transform -translate-x-full transition-transform"
+    >
+      <button
+        id="backButton"
+        class="flex items-center px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white w-full text-left"
+      >
+        Atras
+      </button>
+      <a
+        href="index.html"
+        class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white"
+        >Inicio</a
+      >
+      <a
+        href="cliente.html"
+        class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white"
+        >Clientes</a
+      >
+      <a
+        href="producto.html"
+        class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white"
+        >Productos</a
+      >
+      <a
+        href="factura.html"
+        class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white"
+        >Facturas</a
+      >
+    </div>
+
+    <!-- Botón flotante para abrir el modal -->
+    <button
+      id="openModal"
+      class="fixed bottom-24 sm:bottom-28 right-5 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+      aria-label="Abrir formulario"
+    >
+      <i class="fa-solid fa-user-plus"></i>
+    </button>
+
+    <!-- Modal con formulario -->
+    <div
+      id="modal"
+      class="fixed inset-0 hidden items-center justify-center bg-gray-900 bg-opacity-50 z-20"
+    >
+      <div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-700">
+          Crear o Editar
+        </h2>
+        <form id="dataForm" class="space-y-6">
+          <input type="hidden" id="id" name="id" />
+          <div>
+            <label for="nombre" class="block text-lg font-medium">Nombre</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Nombre"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label for="email" class="block text-lg font-medium">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="E-mail"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label for="telefono" class="block text-lg font-medium"
+              >Teléfono</label
+            >
+            <input
+              type="tel"
+              id="telefono"
+              name="telefono"
+              placeholder="Teléfono"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div id="contrasenia">
+            <label for="contrasenia" class="block text-lg font-medium"
+              >Contraseña</label
+            >
+            <input
+              type="password"
+              id="contrasenia"
+              name="contrasenia"
+              placeholder="Contraseña"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <button
+            type="submit"
+            class="block w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 flex items-center justify-center"
+            aria-label="Guardar usuario"
+          >
+            <i class="fa-solid fa-floppy-disk mr-2"></i>
+            Guardar Usuario
+          </button>
+        </form>
+        <button
+          id="closeModal"
+          class="mt-6 block w-full py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center"
+          aria-label="Cerrar formulario"
+        >
+          <i class="fa-solid fa-circle-xmark mr-2"></i>
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenedor de tarjetas de usuarios -->
+    <main id="mainContent" class="container mx-auto my-10 px-4">
+      <div
+        id="dataList"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      ></div>
+    </main>
+
+    <!-- Modal de Éxito -->
+    <div
+      id="modalExito"
+      class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+      </div>
+    </div>
+
+    <!-- Modal de Result ado de Edición -->
+    <div
+      id="modalEdicion"
+      class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 id="mensajeEdicion" class="text-lg font-semibold"></h2>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmación eliminar -->
+    <div
+      id="modalEliminar"
+      class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h2 class="text-lg font-semibold mb-4">
+          ¿Estás seguro de que deseas eliminar este usuario?
+        </h2>
+        <div class="flex justify-end">
+          <button
+            id="btnEliminar"
+            class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+            aria-label="Eliminar usuario"
+          >
+            Eliminar
+          </button>
+          <button
+            id="btnCancelar"
+            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 ml-2"
+            aria-label="Cancelar eliminación"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie de Página -->
+    <footer
+      class="bg-indigo-600 text-white text-left p-4 fixed bottom-0 w-full"
+    >
+      <p>&copy; 2024 Sistema de Gestión. Todos los derechos reservados.</p>
+    </footer>
+
+    
+    <script src="js/script.js"></script>
+    <script src="js/app_usuario.js"></script>
+  </body>
+</html>
