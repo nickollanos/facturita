@@ -70,9 +70,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>Teléfono: ${user.telefono}</p>
                 <p>Permiso: ${user.permiso || 'Sin permiso'}</p>
                 <div class="mt-4 flex justify-between">
-                    <button onclick="editUser(${user.id})" class="bg-blue-500 text-white px-4 py-2 rounded">Editar</button>
-                    <button onclick="confirmDelete(${user.id})" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
-                    <button onclick="goToPermisos(${user.id}, '${user.nombre}')" class="bg-green-500 text-white px-4 py-2 rounded">Permisos</button>                
+                    <button onclick="editUser(${user.id})" class="bg-blue-500 text-white px-4 py-2 rounded" title="editar usuario">
+                            <img src="img/edit.svg" alt="edit">
+                    </button>
+                    <button onclick="confirmDelete(${user.id})" class="bg-red-500 text-white px-4 py-2 rounded" title="eliminar usuario">
+                            <img src="img/delete.svg" alt="delete">
+                    </button>
+                    <button onclick="goToPermisos(${user.id}, '${user.nombre}')" class="bg-green-500 text-white px-4 py-2 rounded" title="permisos usuario">
+                            <img src="img/permiso.svg" alt="permiso">
+                    </button>                
                 </div>
             `;
                     dataList.appendChild(userCard);

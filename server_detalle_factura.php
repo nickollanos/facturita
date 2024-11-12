@@ -8,35 +8,57 @@ try {
     $pdo = new PDO($dsn, $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Verificar si la solicitud es un POST
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? '';
 
         switch ($action) {
-            case 'assign_permissions':
-                // Obtener los datos del formulario
-                $userId = $_POST['userId'] ?? '';
-                $permiso = $_POST['permiso'] ?? '';
+            case 'add':
+                $id_factura = $_POST['id_factura'] ?? '';
+                $id_prodcuto = $_POST['id_prodcuto'] ?? '';
+                $cantidad = $_POST['cantidad'] ?? '';
+                $precio_unitario = $_POST['precio_unitario'] ?? '';
+                $subtotal = $_POST['subtotal'] ?? '';
 
-                if (!$userId || !$permiso) {
-                    echo json_encode(['success' => false, 'message' => 'Faltan datos.']);
-                    exit;
-                }
+                $stmt = $pdo->prepare("INSERT INTO detalle_factura (id_factura, id_prodcuto, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$id_factura, $id_prodcuto, $cantidad, $precio_unitario, $subtotal]);
+                echo json_encode(['success' => true, 'message' => 'producto asignado con éxito.']);
+                break;
 
-                // Verificar si ya existen permisos para el usuario
-                $stmt = $pdo->prepare("SELECT * FROM permisos_usuario WHERE id_usuario = ?");
-                $stmt->execute([$userId]);
-                $permisoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+            case 'update':
+                $id_factura = $_POST['id_factura'] ?? '';
+                $id_producto = $_POST['id_producto'] ?? '';
+                $cantidad = $_POST['cantidad'] ?? '';
+                $precio_unitario = $_POST['precio_unitario'] ?? '';
+                $subtotal = $_POST['subtotal'] ?? '';
 
-                if ($permisoExistente) {
-                    // Si ya existe, hacer UPDATE
-                    $stmt = $pdo->prepare("UPDATE permisos_usuario SET permiso = ? WHERE id_usuario = ?");
-                    $stmt->execute([$permiso, $userId]);
-                    echo json_encode(['success' => true, 'message' => 'Permisos actualizados correctamente.']);
+                $stmt = $pdo->prepare("UPDATE detalle_factura SET id_factura = ?, id_producto = ?, cantidad = ?, precio_unitario = ?, subtotal = ?, WHERE id_producto = ?");
+                $stmt->execute([$id_factura, $id_producto, $cantidad, $precio_unitario, $id_producto, $subtotal]);
+                echo json_encode(['success' => true, 'message' => 'producto actualizado con éxito.']);
+                break;
+
+            case 'delete':
+                $id_producto = $_POST['id_producto'] ?? '';
+                $stmt = $pdo->prepare("DELETE FROM detalle_fatura WHERE id_producto = ?");
+                $stmt->execute([$id_producto]);
+                echo json_encode(['success' => true, 'message' => 'producto eliminado con éxito.']);
+                break;
+
+            case 'fetch':
+                if (isset($_POST['id_detalle'])) {
+                    $id_detalle = $_POST['id_detalle'];  // Obtener el ID del usuario
+                    $stmt = $pdo->prepare("SELECT * FROM detalle_factura WHERE id_detalle = ?");
+                    $stmt->execute([$id_detalle]);
+                    $detalle_factura = $stmt->fetch(PDO::FETCH_ASSOC);
+                    if ($detalle_factura) {
+                        echo json_encode($detalle_factura); // Enviar el usuario específico
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'producto no encontrado.']);
+                    }
                 } else {
-                    // Si no existe, hacer INSERT
-                    $stmt = $pdo->prepare("INSERT INTO permisos_usuario (id_usuario, permiso) VALUES (?, ?)");
-                    $stmt->execute([$userId, $permiso]);
-                    echo json_encode(['success' => true, 'message' => 'Permisos asignados correctamente.']);
+                    $stmt = $pdo->query("SELECT * FROM detalle_factura");
+                    $detalle_factura = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    echo json_encode($detalle_factura); // Enviar todos los clientes si no hay ID
                 }
                 break;
 

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Añadir Producto</title>
+  <link href="css/tailwind.min.css" rel="stylesheet" />
+  <link href="css/style_usuario.css" rel="stylesheet" />
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+  <!-- Encabezado Principal -->
+  <header class="bg-indigo-600 p-4 shadow-md flex items-center justify-between relative">
+    <div class="relative inline-block">
+      <button id="dropdownButton" class="flex items-center justify-center p-2 text-white focus:outline-none">
+        <img src="img/hamburg.svg" alt="hamburg">
+      </button>
+    </div>
+    <h1 class="text-white text-3xl font-bold">Añadir Productos</h1>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="dropdownContent"
+    class="fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-10 transform -translate-x-full transition-transform">
+    <button id="backButton"
+      class="flex items-center px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white w-full text-left">
+      Atras
+    </button>
+    <a href="index.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Inicio</a>
+    <a href="usuario.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Usuarios</a>
+    <a href="cliente.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Clientes</a>
+    <a href="producto.html" class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white">Productos</a>
+    <a
+      href="factura.html"
+      class="block px-4 py-2 text-gray-800 hover:bg-indigo-600 hover:text-white"
+      >Factura</a
+    >
+  </div>
+
+  <nav class="bg-gray-100 text-white p-2">
+    <div id="datos" class="container mx-auto text-center">
+      <!-- Los datos se cargarán aquí con JS -->
+    </div>
+  </nav>
+
+  <!-- Contenedor del formulario -->
+  <div id="formContainer" class="max-w-md mx-auto p-6 border rounded-lg shadow-md bg-white mt-10">
+    <!-- El formulario se generará aquí por JS -->
+  </div>
+  
+  <!-- Modal de Éxito -->
+  <div
+  id="modalExito"
+  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+  </div>
+</div>
+
+<!-- Botón flotante para abrir el modal -->
+<button
+id="openModal"
+class="fixed bottom-24 sm:bottom-28 right-5 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
+aria-label="Abrir formulario"
+>
+<img src="img/addproduc.svg" alt="addproduc">
+</button>
+
+<!-- Modal con formulario -->
+<div
+id="modal"
+class="fixed inset-0 hidden items-center justify-center bg-gray-900 bg-opacity-50 z-20"
+>
+<div class="bg-white w-full max-w-md p-6 rounded-lg shadow-lg">
+  <h2 class="text-2xl font-semibold mb-6 text-gray-700">
+    Añadir producto
+  </h2>
+  <form id="dataForm" class="space-y-6">
+    <div id="productosContainer">
+      <!-- Tarjeta de Producto -->
+      <div class="productoCard mb-4 p-4 border rounded-md shadow-md bg-white">
+        <div class="mb-4">
+          <label for="producto" class="block text-sm font-medium text-gray-700">Seleccionar Producto:</label>
+          <select class="producto_select mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            <!-- Opciones de productos se llenarán dinámicamente -->
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="cantidad" class="block text-sm font-medium text-gray-700">Cantidad:</label>
+          <input type="text" id="cantidad" class="cantidad mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" min="1" value="1" />
+        </div>
+
+        <div class="mb-4">
+          <label for="precio_unitario" class="block text-sm font-medium text-gray-700">Precio Unitario:</label>
+          <input type="text" id="precio_unitario" class="precio_unitario mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled value="0.00" />
+        </div>
+
+        <div class="mb-4">
+          <label for="subtotal" class="block text-sm font-medium text-gray-700">Subtotal:</label>
+          <input type="text" id="subtotal" class="subtotal mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" disabled value="0.00" />
+        </div>
+
+        <!-- Botón de Enviar -->
+        <button
+        type="submit"
+        class="block w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 flex items-center justify-center"
+        aria-label="Guardar"
+        >
+        <img src="img/save.svg" alt="save">
+        Guardar Información
+        </button>      
+      </div>
+  </form>
+    
+  <button
+    id="closeModal"
+    class="mt-6 block w-full py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center"
+    aria-label="Cerrar formulario"
+  >
+    <img src="img/close.svg" alt="close">
+    Cerrar
+  </button>
+</div>
+</div>
+
+  <!-- Contenedor de tarjetas de usuarios -->
+  <main id="mainContent" class="container mx-auto my-10 px-4">
+    <div
+      id="dataList"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    ></div>
+  </main>
+
+  <!-- Modal de Éxito -->
+  <div
+    id="modalExito"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 id="mensajeExito" class="text-lg font-semibold"></h2>
+    </div>
+  </div>
+
+  <!-- Modal de Result ado de Edición -->
+  <div
+    id="modalEdicion"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 id="mensajeEdicion" class="text-lg font-semibold"></h2>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación eliminar -->
+  <div
+    id="modalEliminar"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+  >
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+      <h2 class="text-lg font-semibold mb-4">
+        ¿Estás seguro de que deseas eliminar este Cliente?
+      </h2>
+      <div class="flex justify-end">
+        <button
+          id="btnEliminar"
+          class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          aria-label="Eliminar usuario"
+        >
+          Eliminar
+        </button>
+        <button
+          id="btnCancelar"
+          class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 ml-2"
+          aria-label="Cancelar eliminación"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Pie de Página -->
+  <footer class="bg-indigo-600 text-white text-left p-4 fixed bottom-0 w-full">
+    <p>&copy; 2024 Sistema de Gestión. Todos los derechos reservados.</p>
+  </footer>  
+
+
+  <script src="js/app_add_producto.js"></script>
+  <script src="js/script.js"></script>
+  
+</body>
+
+</html>

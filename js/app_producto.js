@@ -69,8 +69,12 @@ function fetchProductos() {
                 <p>Precio: ${producto.precio}</p>
                 <p>Stock: ${producto.stock}</p>
                 <div class="mt-4 flex justify-between">
-                    <button onclick="editproducto(${producto.id_producto})" class="bg-blue-500 text-white px-4 py-2 rounded">Editar</button>
-                    <button onclick="confirmDelete(${producto.id_producto})" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
+                    <button onclick="editproducto(${producto.id_producto})" class="bg-blue-500 text-white px-4 py-2 rounded"title="editar producto">
+                            <img src="img/edit.svg" alt="edit">
+                    </button>
+                    <button onclick="confirmDelete(${producto.id_producto})" class="bg-red-500 text-white px-4 py-2 rounded"title="eliminar producto">
+                            <img src="img/delete.svg" alt="delete">
+                    </button>
                 </div>
             `;
             dataList.appendChild(productoCard);

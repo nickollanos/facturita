@@ -32,74 +32,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Cargar todos los productos al inicio
-  // fetchDetalleFacturas();
-
   // Función para mostrar el modal de éxito (oculta el modal después de 3 segundos)
   function showModalExito(message) {
     mensajeExito.textContent = message;
     modalExito.classList.remove("hidden");
     setTimeout(() => modalExito.classList.add("hidden"), 1000);
   }
-
-  // Función para cargar los Facturas
-  // function fetchDetalleFacturas() {
-  //   const formData = new FormData();
-  //   formData.append("action", "fetch");
-
-  //   fetch("server_detalle_factura.php", {
-  //     method: "POST",
-  //     body: formData,
-  //   })
-  //     .then((response) => {
-  //       if (!response.ok) throw new Error("Error en la respuesta de la red");
-  //       return response.json();
-  //     })
-  //     .then((facturas) => {
-  //       console.log("Detalles de facturas cargados:", facturas);
-  //       dataList.innerHTML = ""; // Limpiar la lista de facturas previas
-  //       if (facturas.length === 0) {
-  //         dataList.innerHTML = "<p>No hay facturas disponibles.</p>";
-  //       } else {
-  //         // Iterar sobre las facturas y mostrar los datos
-  //         facturas.forEach((factura) => {
-  //           console.log(factura.id_factura);
-  //           let total = parseFloat(factura.total);
-  //           const facturaCard = document.createElement("div");
-  //           facturaCard.className = "p-4 border rounded-lg shadow-md bg-white";
-  //           facturaCard.innerHTML = `
-  //                       <p><strong>Factura Numero: ${
-  //                         factura.id_factura
-  //                       }</strong>
-  //                       <p><strong>Atendido por:</strong> ${
-  //                         factura.usuario_nombre
-  //                       }</p>
-  //                       <p><strong>Cliente:</strong> ${
-  //                         factura.cliente_nombre
-  //                       }</p>
-  //                       <p><strong>Fecha y Hora:</strong> ${factura.fecha}</p>
-  //                       <p><strong>Total:</strong> $${total.toFixed(2)}</p>
-  //                       <div class="mt-4 flex justify-between">
-  //                           <button onclick="editFactura(${
-  //                             factura.id_factura
-  //                           })" class="bg-blue-500 text-white px-4 py-2 rounded">Editar</button>
-
-  //                           <button onclick="viewFactura(${factura.id_factura})" class="bg-green-500 text-white px-4 py-2 rounded">Detalles Factura</button>
-
-  //                           <button onclick="confirmDelete(${
-  //                             factura.id_factura
-  //                           })" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
-  //                       </div>
-  //                   `;
-  //           dataList.appendChild(facturaCard);
-  //         });
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error al cargar facturas:", error);
-  //       dataList.innerHTML = "<p>Ocurrió un error al cargar las facturas.</p>";
-  //     });
-  // }
 
   // Función para agregar o actualizar factura
   dataForm.addEventListener("submit", function (event) {
@@ -232,10 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function viewFactura(idFactura) {
     console.log("Ver factura con ID:", idFactura);
-
     localStorage.setItem('facturaId', idFactura);
-
-    
-
     window.location.href = 'detalle_factura.html';
 }

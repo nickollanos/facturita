@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>factura</title>
     <link href="css/tailwind.min.css" rel="stylesheet" />
     <link href="css/style_usuario.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
+</head>
 
-  <body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
     <!-- Encabezado Principal -->
     <header
       class="bg-indigo-600 p-4 shadow-md flex items-center justify-between relative"
@@ -25,7 +18,7 @@
           id="dropdownButton"
           class="flex items-center justify-center p-2 text-white focus:outline-none"
         >
-          <i class="fa-solid fa-bars"></i>
+          <img src="img/hamburg.svg" alt="hamburg">
         </button>
       </div>
       <h1 class="text-white text-3xl font-bold">Facturas</h1>
@@ -70,7 +63,7 @@
       class="fixed bottom-24 sm:bottom-28 right-5 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
       aria-label="Abrir formulario"
     >
-      <i class="fa-solid fa-user-plus"></i>
+      <img src="img/addfactura.svg" alt="addfactura">
     </button>
 
     <!-- Modal con formulario -->
@@ -129,7 +122,7 @@
               class="block w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 flex items-center justify-center"
               aria-label="Guardar"
             >
-              <i class="fa-solid fa-floppy-disk mr-2"></i>
+            <img src="img/save.svg" alt="save">
               Guardar Información
             </button>
         </form>
@@ -139,7 +132,7 @@
           class="mt-6 block w-full py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center"
           aria-label="Cerrar formulario"
         >
-          <i class="fa-solid fa-circle-xmark mr-2"></i>
+          <img src="img/close.svg" alt="close">
           Cerrar
         </button>
       </div>
@@ -211,5 +204,5 @@
     
     <script src="js/script.js"></script>
     <script src="js/app_factura.js"></script>
-  </body>
+</body>
 </html>

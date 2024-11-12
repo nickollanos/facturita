@@ -69,8 +69,12 @@ function fetchClientes() {
                 <p>Teléfono: ${cliente.telefono}</p>
                 <p>Direccion: ${cliente.direccion}</p>
                 <div class="mt-4 flex justify-between">
-                    <button onclick="editCliente(${cliente.id_cliente})" class="bg-blue-500 text-white px-4 py-2 rounded">Editar</button>
-                    <button onclick="confirmDelete(${cliente.id_cliente})" class="bg-red-500 text-white px-4 py-2 rounded">Eliminar</button>
+                    <button onclick="editCliente(${cliente.id_cliente})" class="bg-blue-500 text-white px-4 py-2 rounded" title="editar cliente">
+                            <img src="img/edit.svg" alt="edit">
+                    </button>
+                    <button onclick="confirmDelete(${cliente.id_cliente})" class="bg-red-500 text-white px-4 py-2 rounded"title="eliminar cliente">
+                        <img src="img/delete.svg" alt="delete">
+                    </button>
                 </div>
             `;
             dataList.appendChild(clienteCard);

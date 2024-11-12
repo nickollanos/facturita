@@ -9,7 +9,27 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalEliminar = document.getElementById("modalEliminar");
   const btnEliminar = document.getElementById("btnEliminar");
   const contrasenia = document.getElementById("contrasenia");
+  const agregarCompraButton = document.getElementById("agregarProducto");
+  const formContainer = document.getElementById('datos');
+  const idFactura = localStorage.getItem('idFactura');
+  const idCliente = localStorage.getItem('idCliente');
+  const idUsuario = localStorage.getItem('idUsuario');
+  const nombreCliente = localStorage.getItem('nombreCliente');
+  const nombreUsuario = localStorage.getItem('nombreUsuario');
   let currentId = null;
+
+  // Verificar que los datos existan en el localStorage
+  if (idFactura && nombreCliente && nombreUsuario) {
+    formContainer.innerHTML = `
+      <div class="max-w-md sm:max-w-2xl md:max-w-4xl mx-auto bg-gray-200 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-gray-800">Número de Factura: <span class="font-semibold text-gray-600">${idFactura}</span></h3>
+        <h3 class="text-xl font-bold text-gray-800 mt-2">Nombre del Usuario: <span class="font-semibold text-gray-600">${nombreUsuario}</span></h3>
+        <h3 class="text-xl font-bold text-gray-800 mt-2">Nombre del Cliente: <span class="font-semibold text-gray-600">${nombreCliente}</span></h3>
+      </div>
+    `;
+  } else {
+    console.error('No se encontraron los datos en localStorage.');
+  }
 
   // Abrir modal al hacer clic en el botón flotante
   openModalButton.addEventListener("click", function () {
@@ -32,13 +52,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Cargar todos los productos al inicio
-  fetchFacturas();
+  fetchDetalleFacturas();
 
-  // Cargar todos los usuarios al inicio
-  fetchUsers();
-
-  // Cargar todos los clientes al inicio
-  fetchClientes();
+  // Cargar todos los productos al inicio
+  fetchProductos();
 
   // Función para mostrar el modal de éxito (oculta el modal después de 3 segundos)
   function showModalExito(message) {
@@ -47,12 +64,76 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => modalExito.classList.add("hidden"), 1000);
   }
 
-  // Función para cargar los Facturas
-  function fetchFacturas() {
+    // Función para cargar los productos
+    function fetchProductos() {
+      const formData = new FormData();
+      formData.append("action", "fetch");
+      fetch("server_producto.php", {
+        method: "POST",
+        body: formData,
+      })
+      .then((response) => {
+        if (!response.ok) throw new Error("Error en la respuesta de la red");
+        return response.json();
+      })
+      .then((productos) => {
+        console.log("Productos cargados:", productos);
+        const selectProductos = document.querySelector(".producto_select");
+        const inputPrecioUnitario = document.getElementById("precio_unitario");
+        
+        // Agregar opción por defecto
+        const optionDefault = document.createElement("option");
+        optionDefault.value = "";
+        optionDefault.text = "Seleccione un producto";
+        selectProductos.appendChild(optionDefault);
+        
+        // Iterar sobre los productos y agregar opciones
+        productos.forEach((producto) => {
+          const option = document.createElement("option");
+          option.value = producto.id_producto;
+          option.text = producto.nombre;
+          selectProductos.appendChild(option);
+        });
+
+        // Agregar evento de cambio al select
+        selectProductos.addEventListener("change", (e) => {
+          const idProductoSeleccionado = e.target.options[e.target.selectedIndex].value;
+          const productoSeleccionado = productos.find((producto) => producto.id_producto === parseInt(idProductoSeleccionado));
+          
+          if (productoSeleccionado) {
+            inputPrecioUnitario.value = productoSeleccionado.precio;
+          } else {
+            inputPrecioUnitario.value = "0.00";
+          }
+          // Calcular subtotal
+          calcularSubtotal();
+        });
+
+        // Agregar evento de cambio al input de cantidad
+        document.querySelector(".cantidad").addEventListener("input", () => {
+          calcularSubtotal();
+        });
+
+        // Función para calcular subtotal
+        function calcularSubtotal() {
+          const cantidad = parseInt(document.querySelector(".cantidad").value);
+          const precioUnitario = parseFloat(inputPrecioUnitario.value);
+          const subtotal = cantidad * precioUnitario;
+          document.querySelector(".subtotal").value = subtotal.toFixed(2);
+        }
+      })
+      .catch((error) => {
+        console.error("Error al cargar productos:", error);
+      });
+
+  }
+  
+
+  function fetchDetalleFacturas() {
     const formData = new FormData();
     formData.append("action", "fetch");
 
-    fetch("server_factura.php", {
+    fetch("server_detalle_factura.php", {
       method: "POST",
       body: formData,
     })
@@ -60,52 +141,45 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!response.ok) throw new Error("Error en la respuesta de la red");
         return response.json();
       })
-      .then((facturas) => {
-        console.log("Facturas cargadas:", facturas);
+      .then((detalle_facturas) => {
+        console.log("detalle facturas cargadas:", detalle_facturas);
         dataList.innerHTML = ""; // Limpiar la lista de facturas previas
-        if (facturas.length === 0) {
-          dataList.innerHTML = "<p>No hay facturas disponibles.</p>";
+        if (detalle_facturas.length === 0) {
+          dataList.innerHTML = "<p>No hay detalles de facturas disponibles.</p>";
         } else {
           // Iterar sobre las facturas y mostrar los datos
-          facturas.forEach((factura) => {
-            console.log(factura.id_factura);
-            let total = parseFloat(factura.total);
+          detalle_facturas.forEach((detalle_factura) => {
+            console.log(detalle_factura.id_factura);
+            let subtotal = parseFloat(detalle_factura.subtotal);
             const facturaCard = document.createElement("div");
             facturaCard.className = "p-4 border rounded-lg shadow-md bg-white";
             facturaCard.innerHTML = `
-                        <p><strong>Factura Numero: ${
-                          factura.id_factura
+                        <p><strong>Nombre Producto: ${
+                          detalle_factura.id_producto
                         }</strong>
-                        <p><strong>Atendido por:</strong> ${
-                          factura.usuario_nombre
+                        <p><strong>Cantidad:</strong> ${
+                          detalle_factura.cantidad
                         }</p>
-                        <p><strong>Cliente:</strong> ${
-                          factura.cliente_nombre
+                        <p><strong>Precio:</strong> ${
+                          detalle_factura.precio_unitario
                         }</p>
-                        <p><strong>Fecha y Hora:</strong> ${factura.fecha}</p>
-                        <p><strong>Total:</strong> $${total.toFixed(2)}</p>
+                        <p><strong>Subtotal:</strong> ${subtotal.toFixed(2)}</p>
                         <div class="mt-4 flex justify-between">
                             <button onclick="editFactura(${
-                              factura.id_factura
+                              detalle_factura.id_detalle
                             })" class="bg-blue-500 text-white px-4 py-2 rounded" title="editar factura">
                             <img src="img/edit.svg" alt="edit">
                             </button>
 
-                            <button onclick="viewFactura(${factura.id_factura})" class="bg-green-500 text-white px-4 py-2 rounded" title="detalles de factura">
+                            <button onclick="viewFactura(${detalle_factura.id_detalle})" class="bg-green-500 text-white px-4 py-2 rounded" title="detalles de factura">
                             <img src="img/details.svg" alt="details">
                             </button>
 
                             <button onclick="confirmDelete(${
-                              factura.id_factura
+                              detalle_factura.id_detalle
                             })" class="bg-red-500 text-white px-4 py-2 rounded" title="eliminar factura">
                             <img src="img/delete.svg" alt="delete">
                             </button>
-
-                            <button onclick="addProduc('${factura.id_factura}', '${factura.cliente_nombre}', '${factura.usuario_nombre}', '${factura.id_cliente}', '${factura.id_usuario}')"
-                              class="bg-green-500 text-white px-4 py-2 rounded" title="añadir producto">
-                              <img src="img/addproduc.svg" alt="addproduc">
-                            </button>
-
 
                         </div>
                     `;
@@ -119,100 +193,19 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Función para cargar los usuarios
-  function fetchUsers() {
-    const formData = new FormData();
-    formData.append("action", "fetch");
-
-    fetch("server_usuario.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Error en la respuesta de la red");
-        return response.json();
-      })
-      .then((users) => {
-        console.log("usuarios cargados: ", users);
-
-        const selectUsuario = document.getElementById("id_usuario");
-
-        // Limpiar las opciones previas del select
-        selectUsuario.innerHTML =
-          "<option value=''>Seleccione un usuario</option>"; // Opción por defecto
-
-        if (users.length === 0) {
-          console.log("No hay usuarios disponibles");
-        } else {
-          // Agregar cada usuario al select
-          users.forEach((user) => {
-            const option = document.createElement("option");
-            option.value = user.id; // ID del usuario en el value
-            option.textContent = user.nombre; // Nombre del usuario como texto de la opción
-            selectUsuario.appendChild(option); // Agregar la opción al select
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error al cargar usuarios:", error);
-      });
-  }
-
-  // Función para cargar los clientes
-  function fetchClientes() {
-    const formData = new FormData();
-    formData.append("action", "fetch");
-
-    fetch("server_cliente.php", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Error en la respuesta de la red");
-        return response.json();
-      })
-      .then((clientes) => {
-        console.log("clientes cargados: ", clientes);
-
-        // Referencia al select de clientes
-        const selectCliente = document.getElementById("id_cliente");
-
-        // Limpiar las opciones previas del select
-        selectCliente.innerHTML =
-          "<option value=''>Seleccione un cliente</option>"; // Opción por defecto
-
-        if (clientes.length === 0) {
-          console.log("No hay clientes disponibles");
-        } else {
-          // Agregar cada cliente al select
-          clientes.forEach((cliente) => {
-            const option = document.createElement("option");
-            option.value = cliente.id_cliente; // ID del cliente en el value
-            option.textContent = cliente.nombre; // Nombre del cliente como texto de la opción
-            selectCliente.appendChild(option); // Agregar la opción al select
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Error al cargar clientes:", error);
-      });
-  }
-
-  function cargarSelectores() {
-    return Promise.all([fetchClientes(), fetchUsers()]);
-  }
-
-  // Función para agregar o actualizar factura
+  // Función para agregar o actualizar detalle producto
   dataForm.addEventListener("submit", function (event) {
     event.preventDefault();
     console.log("Formulario enviado"); // Para depuración
 
     const formData = new FormData(dataForm);
-    const action = currentId ? "update" : "add";
+    const action = idFactura ? "update" : "add";
     formData.append("action", action);
-    if (currentId) formData.append("id_factura", currentId);
+    formData.append("id_factura",idFactura);
+    console.log(idFactura);
+    if (idFactura) formData.append("id_factura", idFactura);
 
-    fetch("server_factura.php", {
+    fetch("server_detalle_factura.php", {
       method: "POST",
       body: formData,
     })
@@ -231,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("Error en el guardado:", error));
   });
 
-  // Función para editar factura
+  // Función para editar producto
   window.editFactura = function (id_factura) {
     console.log(id_factura);
     fetch("server_factura.php", {
@@ -330,36 +323,3 @@ document.addEventListener("DOMContentLoaded", function () {
     modalEliminar.classList.add("hidden");
   });
 });
-
-function viewFactura(idFactura) {
-    console.log("Ver factura con ID:", idFactura);
-
-    localStorage.setItem('facturaId', idFactura);
-
-    
-
-    window.location.href = 'detalle_factura.html';
-}
-
-// function addProduc(idFactura, nombreCliente, nombreUsuario) {
-//   console.log("Ver factura con ID:", idFactura);
-//   console.log("nombre usuario:", nombreCliente);
-//   console.log("nombre cliente:", nombreUsuario);
-
-//   localStorage.setItem('facturaId', idFactura);
-//   localStorage.setItem('clienteNombre', nombreCliente);
-//   localStorage.setItem('usuarioNombre', nombreUsuario);
-
-//   window.location.href = 'add_producto.html';
-// }
-
-function addProduc(idFactura, nombreCliente, nombreUsuario, idCliente, idUsuario) {
-  // Guardar los datos en localStorage
-  localStorage.setItem('idFactura', idFactura);
-  localStorage.setItem('nombreCliente', nombreCliente);
-  localStorage.setItem('nombreUsuario', nombreUsuario);
-  localStorage.setItem('idCliente', idCliente);
-  localStorage.setItem('idUsuario', idUsuario);
-  // Redirigir a add_producto.html
-  window.location.href = 'add_producto.html';
-}
