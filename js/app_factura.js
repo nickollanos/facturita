@@ -205,11 +205,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Función para agregar o actualizar factura
   dataForm.addEventListener("submit", function (event) {
     event.preventDefault();
-    console.log("Formulario enviado"); // Para depuración
+    console.log("Formulario enviado : ", dataForm); // Para depuración
 
     const formData = new FormData(dataForm);
     const action = currentId ? "update" : "add";
     formData.append("action", action);
+    console.log(currentId);
     if (currentId) formData.append("id_factura", currentId);
 
     fetch("server_factura.php", {
@@ -251,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Esperamos a que se carguen los selectores antes de intentar establecer los valores
         cargarSelectores().then(() => {
             const idUsuario = factura.id;
+            console.log(idUsuario);
             const idCliente = factura.id_cliente;
             const selectUsuario = document.getElementById("id_usuario");
             const optionUsuario = Array.from(selectUsuario.options).find(
