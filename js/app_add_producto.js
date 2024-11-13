@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const nombreCliente = localStorage.getItem('nombreCliente');
   const nombreUsuario = localStorage.getItem('nombreUsuario');
   let currentId = null;
-
+  console.log(currentId);
   // Verificar que los datos existan en el localStorage
   if (idFactura && nombreCliente && nombreUsuario) {
     formContainer.innerHTML = `
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
     // Función para cargar los productos
-    function fetchProductos() {
+  function fetchProductos() {
       const formData = new FormData();
       formData.append("action", "fetch");
       fetch("server_producto.php", {
@@ -128,7 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   }
   
-
   function fetchDetalleFacturas() {
     const formData = new FormData();
     formData.append("action", "fetch");
@@ -144,15 +143,17 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((detalle_facturas) => {
         console.log("detalle facturas cargadas:", detalle_facturas);
         dataList.innerHTML = ""; // Limpiar la lista de facturas previas
-        if (detalle_facturas.length === 0) {
+        console.log(idFactura);
+        const facturasFiltradas = detalle_facturas.filter(
+          (detalle_facturas) => detalle_facturas.id_factura === idFactura
+        );
+        console.log(facturasFiltradas);
+        if (facturasFiltradas.length === 0) {
           dataList.innerHTML = "<p>No hay detalles de facturas disponibles.</p>";
         } else {
           // Iterar sobre las facturas y mostrar los datos
           detalle_facturas.forEach((detalle_factura) => {
             console.log(detalle_factura.id_factura);
-            console.log(detalle_factura.id_producto);
-            console.log(idFactura);
-            if(idFactura === detalle_factura.id_factura){
             let subtotal = parseFloat(detalle_factura.subtotal);
             const facturaCard = document.createElement("div");
             facturaCard.className = "p-4 border rounded-lg shadow-md bg-white";
