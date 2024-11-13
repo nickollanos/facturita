@@ -19,22 +19,34 @@ try {
                 $cantidad = $_POST['cantidad'] ?? '';
                 $precio_unitario = $_POST['precio_unitario'] ?? '';
                 $subtotal = $_POST['subtotal'] ?? '';
-
-                 // Verificar si el producto ya está asignado a esta factura
+            
+                // Verificar si el producto ya está asignado a esta factura
                 $stmt = $pdo->prepare("SELECT COUNT(*) FROM detalle_factura WHERE id_factura = ? AND id_producto = ?");
                 $stmt->execute([$id_factura, $id_producto]);
                 $producto_existente = $stmt->fetchColumn();
-
+            
                 // Si el producto ya está en la factura, no permitir agregarlo
                 if ($producto_existente > 0) {
                     echo json_encode(['success' => false, 'message' => 'Este producto ya está asignado a esta factura. Solo puede ser actualizado.']);
                     exit;
                 }
+            
+                // Insertar el detalle en la tabla detalle_factura
                 $stmt = $pdo->prepare("INSERT INTO detalle_factura (id_factura, id_producto, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$id_factura, $id_producto, $cantidad, $precio_unitario, $subtotal]);
-                echo json_encode(['success' => true, 'message' => 'producto asignado con éxito.']);
+            
+                // Sumar todos los subtotales de la factura para calcular el total
+                $stmt = $pdo->prepare("SELECT SUM(subtotal) FROM detalle_factura WHERE id_factura = ?");
+                $stmt->execute([$id_factura]);
+                $total_factura = $stmt->fetchColumn();
+            
+                // Actualizar el total de la factura en la tabla facturas
+                $stmt = $pdo->prepare("UPDATE facturas SET total = ? WHERE id_factura = ?");
+                $stmt->execute([$total_factura, $id_factura]);
+            
+                echo json_encode(['success' => true, 'message' => 'Producto asignado con éxito y total actualizado.']);
                 break;
-
+            
             case 'update':
                 $id_detalle = $_POST['id_detalle'] ?? '';
                 $id_factura = $_POST['id_factura'] ?? '';
@@ -42,14 +54,25 @@ try {
                 $cantidad = $_POST['cantidad'] ?? '';
                 $precio_unitario = $_POST['precio_unitario'] ?? '';
                 $subtotal = $_POST['subtotal'] ?? '';
+            
+                // Actualizar el detalle de la factura
                 $stmt = $pdo->prepare("UPDATE detalle_factura SET id_factura = ?, id_producto = ?, cantidad = ?, precio_unitario = ?, subtotal = ? WHERE id_detalle = ?");
                 $stmt->execute([$id_factura, $id_producto, $cantidad, $precio_unitario, $subtotal, $id_detalle]);
-                
+            
+                // Sumar todos los subtotales de la factura para calcular el total
+                $stmt = $pdo->prepare("SELECT SUM(subtotal) FROM detalle_factura WHERE id_factura = ?");
+                $stmt->execute([$id_factura]);
+                $total_factura = $stmt->fetchColumn();
+            
+                // Actualizar el total de la factura en la tabla facturas
+                $stmt = $pdo->prepare("UPDATE facturas SET total = ? WHERE id_factura = ?");
+                $stmt->execute([$total_factura, $id_factura]);
+            
                 // Verificar si se actualizó algún registro
                 if ($stmt->rowCount() > 0) {
                     echo json_encode([
                         'success' => true,
-                        'message' => 'Producto actualizado con éxito.'
+                        'message' => 'Producto actualizado con éxito y total actualizado.'
                     ]);
                 } else {
                     echo json_encode([
@@ -58,7 +81,7 @@ try {
                     ]);
                 }
                 break;
-                
+            
 
             case 'delete':
                        
