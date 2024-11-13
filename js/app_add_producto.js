@@ -150,6 +150,9 @@ document.addEventListener("DOMContentLoaded", function () {
           // Iterar sobre las facturas y mostrar los datos
           detalle_facturas.forEach((detalle_factura) => {
             console.log(detalle_factura.id_factura);
+            console.log(detalle_factura.id_producto);
+            console.log(idFactura);
+            if(idFactura === detalle_factura.id_factura){
             let subtotal = parseFloat(detalle_factura.subtotal);
             const facturaCard = document.createElement("div");
             facturaCard.className = "p-4 border rounded-lg shadow-md bg-white";
@@ -184,6 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     `;
             dataList.appendChild(facturaCard);
+          }
           });
         }
       })
