@@ -310,7 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("server_detalle_factura.php", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `action=delete&id_detalle=${currentId}`,
+      body: `action=delete&id_detalle=${currentId}&id_factura=${idFactura}`,
     })
       .then((response) => response.json())
       .then((data) => {

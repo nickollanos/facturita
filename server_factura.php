@@ -81,6 +81,35 @@ try {
                 }
                 break;
 
+            case 'view':
+                $id_factura = $_POST['id_factura'] ?? '';
+
+                if (!$id_factura) {
+                    echo json_encode(['success' => false, 'message' => 'ID de factura no proporcionado.']);
+                    exit;
+                }
+
+                // Consulta de la factura con información del usuario y cliente
+                $stmt = $pdo->prepare("SELECT f.id_factura, f.total, f.fecha, u.nombre AS usuario_nombre, c.nombre AS cliente_nombre 
+                                           FROM facturas f
+                                           JOIN usuarios u ON f.id_usuario = u.id
+                                           JOIN clientes c ON f.id_cliente = c.id_cliente
+                                           WHERE f.id_factura = ?");
+                $stmt->execute([$id_factura]);
+                $factura = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                // Consulta de los detalles de la factura con información del producto
+                $stmt = $pdo->prepare("SELECT df.cantidad, df.subtotal, p.nombre AS producto 
+                                           FROM detalle_factura df
+                                           JOIN productos p ON df.id_producto = p.id_producto
+                                           WHERE df.id_factura = ?");
+                $stmt->execute([$id_factura]);
+                $detalles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                echo json_encode(['factura' => $factura, 'detalles' => $detalles]);
+                break;
+
+
 
             default:
                 echo json_encode(['success' => false, 'message' => 'Acción no válida.']);

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>factura</title>
     <link href="css/tailwind.min.css" rel="stylesheet" />
     <link href="css/style_usuario.css" rel="stylesheet" />
-</head>
+  </head>
 
-<body class="bg-gray-100 text-gray-800">
+  <body class="bg-gray-100 text-gray-800">
     <!-- Encabezado Principal -->
     <header
       class="bg-indigo-600 p-4 shadow-md flex items-center justify-between relative"
@@ -18,7 +18,7 @@
           id="dropdownButton"
           class="flex items-center justify-center p-2 text-white focus:outline-none"
         >
-          <img src="img/hamburg.svg" alt="hamburg">
+          <img src="img/hamburg.svg" alt="hamburg" />
         </button>
       </div>
       <h1 class="text-white text-3xl font-bold">Facturas</h1>
@@ -63,7 +63,7 @@
       class="fixed bottom-24 sm:bottom-28 right-5 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none"
       aria-label="Abrir formulario"
     >
-      <img src="img/addfactura.svg" alt="addfactura">
+      <img src="img/addfactura.svg" alt="addfactura" />
     </button>
 
     <!-- Modal con formulario -->
@@ -76,63 +76,69 @@
           Crear o Editar
         </h2>
         <form id="dataForm" class="space-y-6">
-            <!-- Select para Usuarios -->
-            <div>
-              <label for="id_usuario" class="block text-lg font-medium">Seleccionar Usuario</label>
-              <select
-                id="id_usuario"
-                name="id_usuario"
-                required
-                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              >
-                <!-- <option value="">Seleccione un usuario</option> -->
-                <!-- Opciones de usuarios se llenarán dinámicamente -->
-              </select>
-            </div>
-          
-            <!-- Select para Clientes -->
-            <div>
-              <label for="id_cliente" class="block text-lg font-medium">Seleccionar Cliente</label>
-              <select
-                id="id_cliente"
-                name="id_cliente"
-                required
-                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              >
-                <!-- <option value="">Seleccione un cliente</option> -->
-                <!-- Opciones de clientes se llenarán dinámicamente -->
-              </select>
-            </div>
-          
-            <!-- Input para Fecha y Hora -->
-            <div>
-              <label for="fecha" class="block text-lg font-medium">Fecha y Hora</label>
-              <input
-                type="datetime-local"
-                id="fecha"
-                name="fecha"
-                required
-                class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-          
-            <!-- Botón de Enviar -->
-            <button
-              type="submit"
-              class="block w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 flex items-center justify-center"
-              aria-label="Guardar"
+          <!-- Select para Usuarios -->
+          <div>
+            <label for="id_usuario" class="block text-lg font-medium"
+              >Seleccionar Usuario</label
             >
-            <img src="img/save.svg" alt="save">
-              Guardar Información
-            </button>
+            <select
+              id="id_usuario"
+              name="id_usuario"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            >
+              <!-- <option value="">Seleccione un usuario</option> -->
+              <!-- Opciones de usuarios se llenarán dinámicamente -->
+            </select>
+          </div>
+
+          <!-- Select para Clientes -->
+          <div>
+            <label for="id_cliente" class="block text-lg font-medium"
+              >Seleccionar Cliente</label
+            >
+            <select
+              id="id_cliente"
+              name="id_cliente"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            >
+              <!-- <option value="">Seleccione un cliente</option> -->
+              <!-- Opciones de clientes se llenarán dinámicamente -->
+            </select>
+          </div>
+
+          <!-- Input para Fecha y Hora -->
+          <div>
+            <label for="fecha" class="block text-lg font-medium"
+              >Fecha y Hora</label
+            >
+            <input
+              type="datetime-local"
+              id="fecha"
+              name="fecha"
+              required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <!-- Botón de Enviar -->
+          <button
+            type="submit"
+            class="block w-full py-2 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 flex items-center justify-center"
+            aria-label="Guardar"
+          >
+            <img src="img/save.svg" alt="save" />
+            Guardar Información
+          </button>
         </form>
-          
+
         <button
           id="closeModal"
           class="mt-6 block w-full py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center"
           aria-label="Cerrar formulario"
         >
-          <img src="img/close.svg" alt="close">
+          <img src="img/close.svg" alt="close" />
           Cerrar
         </button>
       </div>
@@ -145,6 +151,35 @@
         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
       ></div>
     </main>
+
+    <!-- Contenedor de la factura como tal -->
+    <div id="facturaModal" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+      <!-- Contenedor principal del modal -->
+      <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+        <!-- Contenido de la factura -->
+        <div id="impresion">
+          <div id="facturaEncabezado" class="mb-4">
+            <!-- Aquí se cargará el encabezado de la factura -->
+          </div>
+          <div id="facturaDetalles" class="mb-4">
+            <!-- Aquí se cargará la lista de productos -->
+          </div>
+          <p id="facturaTotal" class="text-right font-bold mb-4">
+            <!-- Aquí se mostrará el total -->
+          </p>
+        </div>
+        <!-- Contenedor de botones fuera del contenido de la factura -->
+      <div class="flex justify-end space-x-4 mt-4">
+        <button onclick="printFactura()" class="bg-blue-500 text-white px-4 py-2 rounded">
+          <img src="img/print.svg" alt="print">
+        </button>
+        <button onclick="closeModal()" class="bg-red-500 text-white px-4 py-2 rounded">
+          <img src="img/noprint.svg" alt="print">
+        </button>
+      </div>
+      </div>
+    </div>
+    
 
     <!-- Modal de Éxito -->
     <div
@@ -201,8 +236,7 @@
       <p>&copy; 2024 Sistema de Gestión. Todos los derechos reservados.</p>
     </footer>
 
-    
     <script src="js/script.js"></script>
     <script src="js/app_factura.js"></script>
-</body>
+  </body>
 </html>
